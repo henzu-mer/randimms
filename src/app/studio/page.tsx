@@ -246,9 +246,9 @@ export default function StudioPage() {
 
           {uploadMode === 'file' ? (
             <div className="sm:col-span-2">
-              <label className="text-[12px] font-medium text-white/70 mb-1.5 block">Video File * (mp4, webm, mov)</label>
+              <label className="text-[12px] font-medium text-white/70 mb-1.5 block">Video File * (mp4, webm, mov, m3u8)</label>
               <div className="rounded-xl border border-dashed border-white/[0.15] bg-white/[0.02] p-6 text-center hover:bg-white/[0.04] transition-colors">
-                <input type="file" accept="video/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="hidden" id="video-file" />
+                <input type="file" accept="video/*,.m3u8" onChange={(e) => setFile(e.target.files?.[0] || null)} className="hidden" id="video-file" />
                 <label htmlFor="video-file" className="cursor-pointer">
                   <div className="mx-auto h-10 w-10 rounded-full bg-white/[0.08] flex items-center justify-center mb-3">
                     <svg className="w-5 h-5 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -256,15 +256,15 @@ export default function StudioPage() {
                     </svg>
                   </div>
                   <div className="text-[13px] text-white/70">{file ? file.name : 'Click to select video or drag here'}</div>
-                  <div className="text-[11px] text-white/30 mt-1">{file ? `${(file.size / 1024 / 1024).toFixed(1)} MB` : 'Max 500MB, mp4 recommended'}</div>
+                  <div className="text-[11px] text-white/30 mt-1">{file ? `${(file.size / 1024 / 1024).toFixed(1)} MB` : 'Max 500MB, mp4 recommended • HLS .m3u8 supported via URL mode'}</div>
                 </label>
               </div>
             </div>
           ) : (
             <div className="sm:col-span-2">
-              <label className="text-[12px] font-medium text-white/70 mb-1.5 block">Video URL *</label>
-              <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://.../video.mp4 or any direct video link" className="w-full h-11 px-4 rounded-xl bg-white/[0.06] border border-white/[0.08] text-white placeholder:text-white/30 text-[14px] focus:outline-none focus:border-white/20" />
-              <p className="text-[11px] text-white/30 mt-1.5">Supports direct mp4 links or external URLs. Example sample videos work great for testing.</p>
+              <label className="text-[12px] font-medium text-white/70 mb-1.5 block">Video URL * (mp4, HLS .m3u8, CDN)</label>
+              <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://.../video.mp4 or https://.../playlist.m3u8" className="w-full h-11 px-4 rounded-xl bg-white/[0.06] border border-white/[0.08] text-white placeholder:text-white/30 text-[14px] focus:outline-none focus:border-white/20" />
+              <p className="text-[11px] text-white/30 mt-1.5">Supports mp4, webm, <span className="text-white/60 font-medium">HLS (.m3u8) for adaptive bitrate</span>, Bunny CDN, Cloudflare Stream, S3, etc. Player auto-detects HLS and shows quality selector.</p>
             </div>
           )}
 
@@ -307,8 +307,9 @@ export default function StudioPage() {
           {uploading ? 'Uploading...' : 'Upload Video'}
         </button>
 
-        <div className="text-[11px] text-white/30 leading-relaxed">
-          Videos are stored in <code className="bg-white/[0.08] px-1 py-0.5 rounded">public/uploads</code> and metadata in SQLite. You can also manually add files to that folder and insert DB records. Max upload size configured in Next.js.
+        <div className="text-[11px] text-white/30 leading-relaxed space-y-1">
+          <p>Videos stored in <code className="bg-white/[0.08] px-1 py-0.5 rounded">public/uploads</code> and metadata in SQLite. For HLS: upload .ts segments to CDN and paste .m3u8 URL via URL mode — player uses hls.js with auto quality.</p>
+          <p>CDN-ready: Supports external URLs, Bunny.net, Cloudflare Stream, S3, R2. Caching headers configured for .m3u8 (short) and .ts / mp4 (long). Fast start via preload=metadata.</p>
         </div>
       </form>
     </div>

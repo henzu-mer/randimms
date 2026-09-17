@@ -48,7 +48,7 @@ export default async function WatchPage({ params }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
         {/* Main */}
         <div className="min-w-0">
-          <VideoPlayer src={video.file_path} poster={video.thumbnail_path} />
+          <VideoPlayer src={video.file_path} poster={video.thumbnail_path} title={video.title} />
 
           <div className="mt-6">
             <div className="flex flex-wrap gap-2 mb-3">
